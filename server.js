@@ -27,13 +27,6 @@ const multer = require("multer");
 const cloudinary = require('cloudinary').v2;
 const streamifier = require('streamifier');
 
-// Configure Cloudinary
-cloudinary.config({
-    cloud_name: "dcf8mkkft",
-    api_key: "513183961878192",
-    api_secret: "i5LZmE7hEogoBUWOoSMPGj5XMgY",
-    secure: true
-});
 
 // Set up multer (no local storage)
 const upload = multer();
