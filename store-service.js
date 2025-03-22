@@ -16,14 +16,15 @@ GitHub Repository URL: https://github.com/avarghese-john/web322-app.
 const fs = require("fs");
 const path = require("path");
 
-//let items = [];
+let items = [];
 
-let items = [
+/*let items = [
     { id: 1, category: 5, postDate: "2024-01-10" },
     { id: 2, category: 3, postDate: "2023-11-15" },
     { id: 3, category: 5, postDate: "2024-02-05" },
     { id: 4, category: 2, postDate: "2022-08-22" }
 ];
+*/
 let categories = [];
 
 function initialize() {
@@ -78,13 +79,16 @@ function getCategories() {
     });
 }
 
-// Step 3: Add the addItem function
+// Step 3: Add the addItem function (Updated in Ass 4)
 function addItem(itemData) {
     return new Promise((resolve, reject) => {
         // Set the published property to false if undefined
         if (itemData.published === undefined) {
             itemData.published = false;
         }
+
+        // Set the postDate to the current date in YYYY-MM-DD format
+        itemData.postDate = new Date().toISOString().split('T')[0];
 
         // Set the id to the length of the items array + 1
         itemData.id = items.length + 1;
@@ -93,17 +97,25 @@ function addItem(itemData) {
         items.push(itemData);
 
         // Write the updated items array to items.json
-        fs.writeFile(path.join(__dirname, "data", "items.json"), JSON.stringify(items, null, 2), (err) => {
-            if (err) {
-                reject("Error saving item data");
-                return;
-            }
+        fs.writeFile(
+            path.join(__dirname, "data", "items.json"),
+            JSON.stringify(items, null, 2),
+            (err) => {
+                if (err) {
+                    reject("Error saving item data");
+                    return;
+                }
 
-            // Resolve the promise with the newly added item
-            resolve(itemData);
-        });
+                // Resolve the promise with the newly added item
+                resolve(itemData);
+            }
+        );
     });
 }
+
+//Part 4
+
+
 
 
 // Step 1: getItemsByCategory(category)
@@ -145,5 +157,18 @@ function getItemById(id) {
 
 // Export all functions including the new addItem function
 module.exports = { initialize, getAllItems, getPublishedItems, getCategories, addItem, getItemsByCategory, getItemsByMinDate, getItemById };
+
+module.exports.getPublishedItemsByCategory = function(category) {
+    return new Promise((resolve, reject) => {
+        let filteredItems = items.filter(item => item.published == true && item.category == category);
+        if (filteredItems.length > 0) {
+            resolve(filteredItems);
+        } else {
+            reject("no results returned");
+        }
+    });
+};
+
+
 
 
